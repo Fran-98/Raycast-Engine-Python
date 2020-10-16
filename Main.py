@@ -4,7 +4,7 @@ from math import*
 from Maps import Maps
 from Raycasting import Raycasting
 pg.init()
-screen_Size = (640,560)
+screen_Size = (320,280)
 screen = pg.display.set_mode(screen_Size)
 
 pg.display.set_caption("FranEngine2")
@@ -25,7 +25,7 @@ plane = [0.0,0.5]
 
 run = True
 
-fps=30
+fps=60
 startFrameTime=0
 Map = Maps.load(1)
 
@@ -82,5 +82,5 @@ while run:
     pg.display.update() 
 
     #fps counter
-    # print((pg.time.get_ticks()-startFrameTime))
+    print(round(1000/(pg.time.get_ticks()-startFrameTime))," FPS")
     pg.time.delay((int(1000/fps))-(pg.time.get_ticks()-startFrameTime))

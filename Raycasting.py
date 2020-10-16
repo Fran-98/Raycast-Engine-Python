@@ -34,16 +34,19 @@ class Raycasting:
                 dY = 64
 
             dX = int(64//tan((atan(direction[1]/direction[0])+radians(column * ray_Step - fov / 2))))
-            print("dX",dX)
+            
             while hit is not True:
             #Check if there is a wall in [grid_X][grid_Y]
-                print("Grid X", grid_X,"Grid_Y",grid_Y,"Map",Map[grid_X][grid_Y])
+                
                 if grid_X < 0 or grid_X > len(Map)-1:
                     hit = True
                     hit_Y = "False"
+                    break
                 if grid_Y < 0 or grid_Y > len(Map[0])-1:
                     hit = True
                     hit_Y = "False"
+                    break
+                
                 if Map[grid_X][grid_Y] != 1:
                     hit = True
                     hit_Y = [grid_X,grid_Y]
@@ -84,10 +87,13 @@ class Raycasting:
                 if grid_Y < 0 or grid_Y > len(Map[0])-1:
                     hit = True
                     hit_X = "False"
+                    break
                 if grid_X < 0 or grid_X > len(Map)-1:
                     hit = True
                     hit_X = "False"
-                
+                    
+                    break
+            
                 if Map[grid_X][grid_Y] != 1:
 
                     hit = True
