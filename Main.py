@@ -4,23 +4,23 @@ from math import*
 from Maps import Maps
 from Raycasting import Raycasting
 pg.init()
-screen_Size = (320,280)
+screen_Size = (500,400)
 screen = pg.display.set_mode(screen_Size)
 
 pg.display.set_caption("FranEngine2")
 
-player_Pos = [250,250]
+player_Pos = [500,500]
 player_Size = (20,20)
 move_Vel = 5
 rot_Speed = 2
 look_Ang = 0
 fov = 60
 
-dist_Proy = screen_Size[0]/tan(degrees(fov))
+dist_to_plane = screen_Size[0]/tan(degrees(fov))
 ray_Step = fov/screen_Size[0]
 
-direction = [1,-0.5]
-plane = [0.0,0.5]
+direction = [-1.0,0.0]
+plane = [0.0,0.66]
 
 
 run = True
@@ -77,10 +77,13 @@ while run:
     screen.fill((145,145,145)) #floor
     pg.draw.rect(screen,(60,255,220),(0,0,screen_Size[0],screen_Size[1]//2)) #celling  
 
-    Raycasting.casting3D(screen,screen_Size,player_Pos,direction,plane,fov,Map,ray_Step)
+    Raycasting.casting3D(screen,screen_Size,player_Pos,direction,plane,fov,Map,ray_Step,dist_to_plane)
 
     pg.display.update() 
 
     #fps counter
-    print(round(1000/(pg.time.get_ticks()-startFrameTime))," FPS")
+    # fpscounter = str(round(1000/(pg.time.get_ticks()-startFrameTime)))
+
+    
+
     pg.time.delay((int(1000/fps))-(pg.time.get_ticks()-startFrameTime))
