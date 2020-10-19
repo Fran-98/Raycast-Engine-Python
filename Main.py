@@ -3,13 +3,14 @@ import numpy as np
 from math import*
 from Maps import Maps
 from Raycasting import Raycasting
+
 pg.init()
 screen_Size = (500,400)
 screen = pg.display.set_mode(screen_Size)
 
 pg.display.set_caption("FranEngine2")
 
-player_Pos = [7,7]
+player_Pos = [5,5]
 move_Vel = 5
 rot_Speed = 2
 fov = 60
@@ -19,10 +20,8 @@ ray_Step = fov/screen_Size[0]
 direction = [-1.0,0.0]
 plane = [0.0,0.66]
 
-
 run = True
 
-fps=60
 startFrameTime=0
 Map = Maps.load(1)
 
@@ -55,18 +54,18 @@ while run:
     # To rotate the view we have to rotate the camera plane
     if keys[pg.K_a]:
         old_direction = direction[0]
-        direction[0] = direction[0] * cos(radians(rot_Speed)) - direction[1] * sin((radians(rot_Speed)))
-        direction[1] = old_direction * sin(radians(rot_Speed)) + direction[1] * cos((radians(rot_Speed))) 
+        direction[0] = direction[0] * cos(rot_Speed) - direction[1] * sin((rot_Speed))
+        direction[1] = old_direction * sin(rot_Speed) + direction[1] * cos((rot_Speed)) 
         old_Plane = plane[0]
-        plane[0]= plane[0] * cos(radians(rot_Speed)) - plane[1] * sin((radians(rot_Speed)))
-        plane[1]= old_Plane * cos((radians(rot_Speed))) + plane[1] * cos((radians(rot_Speed)))
+        plane[0]= plane[0] * cos(rot_Speed) - plane[1] * sin(rot_Speed)
+        plane[1]= old_Plane * sin(rot_Speed) + plane[1] * cos(rot_Speed)
     if keys[pg.K_d]:
         old_direction = direction[0]
-        direction[0] = direction[0] * cos(radians(rot_Speed)) - direction[1] * sin(radians(rot_Speed))
-        direction[1] = old_direction * sin(radians(rot_Speed)) + direction[1] * cos(radians(rot_Speed)) 
+        direction[0] = direction[0] * cos(-rot_Speed) - direction[1] * sin(-rot_Speed)
+        direction[1] = old_direction * sin(-rot_Speed) + direction[1] * cos(-rot_Speed) 
         old_Plane = plane[0]
-        plane[0]= plane[0] * cos(radians(rot_Speed)) - plane[1] * sin(radians(rot_Speed))
-        plane[1]= old_Plane * cos(radians(rot_Speed)) + plane[1] * cos(radians(rot_Speed))
+        plane[0]= plane[0] * cos(-rot_Speed) - plane[1] * sin(-rot_Speed)
+        plane[1]= old_Plane * sin(-rot_Speed) + plane[1] * cos(-rot_Speed)
     
     
     
@@ -78,9 +77,10 @@ while run:
 
     pg.display.update() 
 
+    frame_time = (pg.time.get_ticks() - startFrameTime)/ 1000
+
+    move_Vel = frame_time * 1
+    rot_Speed = frame_time * 3
     #fps counter
     # fpscounter = str(round(1000/(pg.time.get_ticks()-startFrameTime)))
 
-    
-
-    pg.time.delay((int(1000/fps))-(pg.time.get_ticks()-startFrameTime))

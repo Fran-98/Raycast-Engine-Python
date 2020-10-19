@@ -23,12 +23,11 @@ class Raycasting:
             ray_Direction[0] = direction[0] + plane[0] * cameraX
             ray_Direction[1] = direction[1] + plane[1] * cameraX  + .0000000001
  
-            ray_Map_Pos[0] = int(ray_Pos[0]) 
-            ray_Map_Pos[1] = int(ray_Pos[1])
-            
-            deltaDistX = sqrt (1.0 +(ray_Direction[1] * ray_Direction[1])/(ray_Direction[0]*ray_Direction[0]))
-            deltaDistY = sqrt (1.0 +(ray_Direction[0] * ray_Direction[0])/(ray_Direction[1]*ray_Direction[1]))
-            
+            ray_Map_Pos[0] = int(floor(ray_Pos[0])) 
+            ray_Map_Pos[1] = int(floor(ray_Pos[1]))
+            print(ray_Map_Pos)
+            deltaDistX = abs(1/ray_Direction[0])
+            deltaDistY = abs(1/ray_Direction[1])          
             if ray_Direction[0] < 0:
                 stepX = -1 
                 sideDistX = (ray_Pos[0] - ray_Map_Pos[0]) * deltaDistX
@@ -37,11 +36,11 @@ class Raycasting:
                 sideDistX = (ray_Map_Pos[0] + 1.0 - ray_Pos[0]) * deltaDistX
 
             if ray_Direction[1] < 0:
-                stepX = -1 
+                stepY = -1 
                 sideDistY = (ray_Pos[1] - ray_Map_Pos[1]) * deltaDistY
             else:
-                stepX = 1 
-                sideDistY = (ray_Map_Pos[1] + 1.0 -ray_Pos[1]) * deltaDistY
+                stepY = 1 
+                sideDistY = (ray_Map_Pos[1] + 1.0 - ray_Pos[1]) * deltaDistY
 
             hit = False
             side = 0
@@ -56,13 +55,13 @@ class Raycasting:
                     sideDistY += deltaDistY
                     ray_Map_Pos[1] += stepY
                     side = 1
-                if Map[ray_Map_Pos[0]][ray_Map_Pos[1]]:
+                if Map[ray_Map_Pos[0]][ray_Map_Pos[1]] > 0:
                     hit = True
-                
+            print(ray_Map_Pos)
             if side == 0:
-                perp_Wall_Dist = abs((ray_Map_Pos[0]-ray_Pos[0]+(1- stepX)/2)/ray_Direction[0])
+                perp_Wall_Dist = (ray_Map_Pos[0]-ray_Pos[0]+(1- stepX)/2)/ray_Direction[0]
             else:
-                perp_Wall_Dist = abs((ray_Map_Pos[1]-ray_Pos[1]+(1- stepY)/2)/ray_Direction[1])
+                perp_Wall_Dist = (ray_Map_Pos[1]-ray_Pos[1]+(1- stepY)/2)/ray_Direction[1]
 
             if perp_Wall_Dist == 0:
                 wall_Height = 0
