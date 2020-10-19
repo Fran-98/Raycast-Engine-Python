@@ -11,7 +11,7 @@ screen = pg.display.set_mode(screen_Size)
 pg.display.set_caption("FranEngine2")
 
 player_Pos = [2,2]
-move_Vel = 5
+move_Vel = 10
 rot_Speed = 2
 fov = 60
 
@@ -33,25 +33,8 @@ while run:
             run = False
 
     keys = pg.key.get_pressed()
-    # Moving to the sides in dev
-    # if keys[pg.K_LEFT] and player_Pos[0]>move_Vel:
-    #     player_Pos[0]-=move_Vel
-    # if keys[pg.K_RIGHT] and player_Pos[0]<screen_Size[0]-player_Size[0]:
-    #     player_Pos[0]+=move_Vel
 
-    # And here we have some movement(conventional)
-    # if keys[pg.K_UP]:
-    #     if Map[player_Pos[0]//64][player_Pos[1]]:
-    #         player_Pos[0] += direction[0] * move_Vel
-    #     if Map[player_Pos[0]][player_Pos[1]//64]:
-    #         player_Pos[1] += direction[1] * move_Vel
-    # if keys[pg.K_DOWN]:   
-    #     if Map[player_Pos[0]//64][player_Pos[1]]:
-    #         player_Pos[0] -= direction[0] * move_Vel
-    #     if Map[player_Pos[0]][player_Pos[1]//64]:
-    #         player_Pos[1] += direction[1] * move_Vel
-
-    # To rotate the view we have to rotate the camera plane
+     # To rotate the view we have to rotate the camera plane
     if keys[pg.K_a]:
         old_direction = direction[0]
         direction[0] = direction[0] * cos(rot_Speed) - direction[1] * sin((rot_Speed))
@@ -66,12 +49,32 @@ while run:
         old_Plane = plane[0]
         plane[0]= plane[0] * cos(-rot_Speed) - plane[1] * sin(-rot_Speed)
         plane[1]= old_Plane * sin(-rot_Speed) + plane[1] * cos(-rot_Speed)
-    
-    
+
+    # Moving to the sides in dev
+
+    if keys[pg.K_LEFT]:
+            player_Pos[0] += move_Vel * (direction[0] * cos(radians(90)) - direction[1] * sin(radians(90)))
+            player_Pos[1] += move_Vel * (direction[0] * sin(radians(90)) + direction[1] * cos(radians(90)))
+    if keys[pg.K_RIGHT]:
+            player_Pos[0] -= move_Vel * (direction[0] * cos(radians(90)) - direction[1] * sin(radians(90)))
+            player_Pos[1] -= move_Vel * (direction[0] * sin(radians(90)) + direction[1] * cos(radians(90)))
+
+
+    # And here we have some movement(conventional)
+    if keys[pg.K_UP]:
+        if Map[int(player_Pos[0] + direction[0] * move_Vel)][int(player_Pos[1])] == 0:
+            player_Pos[0] += direction[0] * move_Vel
+        if Map[int(player_Pos[0])][int(player_Pos[1] + direction[1]* move_Vel)] == 0:
+            player_Pos[1] += direction[1] * move_Vel
+    if keys[pg.K_DOWN]: 
+        if Map[int(player_Pos[0] - direction[0] * move_Vel)][int(player_Pos[1])] == 0:
+            player_Pos[0] -= direction[0] * move_Vel
+        if Map[int(player_Pos[0])][int(player_Pos[1] - direction[1] * move_Vel)] == 0:
+            player_Pos[1] -= direction[1] * move_Vel
     
     # Drawing celling and floor
     screen.fill((145,145,145)) #floor
-    pg.draw.rect(screen,(60,255,220),(0,0,screen_Size[0],screen_Size[1]//2)) #celling  
+    pg.draw.rect(screen,(60,255,220),(0,0,screen_Size[0],screen_Size[1]//2)) #ceilling  
 
     Raycasting.casting3D(screen,screen_Size,player_Pos,direction,plane,fov,Map,ray_Step)
 
@@ -82,5 +85,5 @@ while run:
     move_Vel = frame_time * 1
     rot_Speed = frame_time * 3
     #fps counter
-    # fpscounter = str(round(1000/(pg.time.get_ticks()-startFrameTime)))
-
+    fpscounter = str(round(1000/(pg.time.get_ticks()-startFrameTime)))
+    

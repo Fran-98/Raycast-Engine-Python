@@ -16,8 +16,8 @@ class Raycasting:
         #We have to do the process for every column/pixel
         # Checking col with horizontal lines
 
-        while column < screen_Size[0]-1:
-        
+        while column < screen_Size[0]:
+            
             cameraX = 2 * column / screen_Size[0] - 1.0
 
             ray_Direction[0] = direction[0] + plane[0] * cameraX
@@ -81,6 +81,10 @@ class Raycasting:
 
             if drawEnd >= screen_Size[1]:
                 drawEnd = screen_Size[1] - 1
+
+            color = [255,0,0]
+            if side == 1:
+                color = [color[0]/1.5,color[1]/1.5,color[2]/1.5,] 
 
             pg.draw.line(screen,color,(column,drawStart),(column,drawEnd))
 
