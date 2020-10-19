@@ -13,6 +13,7 @@ pg.display.set_caption("FranEngine2")
 player_Pos = [2,2]
 move_Speed = 4
 rot_Speed = 2
+col_Radius = 0.25
 fov = 60
 
 ray_Step = fov/screen_Size[0]
@@ -53,27 +54,27 @@ while run:
     # Moving to the sides in dev
 
     if keys[pg.K_LEFT]:
-        if Map[int(player_Pos[0] + move_Vel * (direction[0] * cos(radians(90)) - direction[1] * sin(radians(90))))][int(player_Pos[1])] == 0:
+        if Map[int(col_Radius + player_Pos[0] + move_Vel * (direction[0] * cos(radians(90)) - direction[1] * sin(radians(90))))][int(player_Pos[1])] == 0:
             player_Pos[0] += move_Vel * (direction[0] * cos(radians(90)) - direction[1] * sin(radians(90)))
-        if Map[int(player_Pos[0])][int(player_Pos[1] + move_Vel * (direction[0] * sin(radians(90)) + direction[1] * cos(radians(90))))] == 0:
+        if Map[int(player_Pos[0])][int(col_Radius + player_Pos[1] + move_Vel * (direction[0] * sin(radians(90)) + direction[1] * cos(radians(90))))] == 0:
             player_Pos[1] += move_Vel * (direction[0] * sin(radians(90)) + direction[1] * cos(radians(90)))
     if keys[pg.K_RIGHT]:
-        if Map[int(player_Pos[0] + move_Vel * (direction[0] * cos(radians(90)) - direction[1] * sin(radians(90))))][int(player_Pos[1])] == 0:
+        if Map[int(col_Radius + player_Pos[0] + move_Vel * (direction[0] * cos(radians(90)) - direction[1] * sin(radians(90))))][int(player_Pos[1])] == 0:
             player_Pos[0] -= move_Vel * (direction[0] * cos(radians(90)) - direction[1] * sin(radians(90)))
-        if Map[int(player_Pos[0])][int(player_Pos[1] + move_Vel * (direction[0] * sin(radians(90)) + direction[1] * cos(radians(90))))] == 0:
+        if Map[int(player_Pos[0])][int(col_Radius + player_Pos[1] + move_Vel * (direction[0] * sin(radians(90)) + direction[1] * cos(radians(90))))] == 0:
             player_Pos[1] -= move_Vel * (direction[0] * sin(radians(90)) + direction[1] * cos(radians(90)))
 
 
     # And here we have some movement(conventional)
     if keys[pg.K_UP]:
-        if Map[int(player_Pos[0] + direction[0] * move_Vel)][int(player_Pos[1])] == 0:
+        if Map[int(col_Radius + player_Pos[0] + direction[0] * move_Vel)][int(player_Pos[1])] == 0:
             player_Pos[0] += direction[0] * move_Vel
-        if Map[int(player_Pos[0])][int(player_Pos[1] + direction[1]* move_Vel)] == 0:
+        if Map[int(player_Pos[0])][int(col_Radius + player_Pos[1] + direction[1]* move_Vel)] == 0:
             player_Pos[1] += direction[1] * move_Vel
     if keys[pg.K_DOWN]: 
-        if Map[int(player_Pos[0] - direction[0] * move_Vel)][int(player_Pos[1])] == 0:
+        if Map[int(col_Radius + player_Pos[0] - direction[0] * move_Vel)][int(player_Pos[1])] == 0:
             player_Pos[0] -= direction[0] * move_Vel
-        if Map[int(player_Pos[0])][int(player_Pos[1] - direction[1] * move_Vel)] == 0:
+        if Map[int(player_Pos[0])][int(col_Radius + player_Pos[1] - direction[1] * move_Vel)] == 0:
             player_Pos[1] -= direction[1] * move_Vel
     
     # Drawing celling and floor
@@ -89,5 +90,5 @@ while run:
     move_Vel = frame_time * move_Speed
     rot_Vel = frame_time * rot_Speed
     #fps counter
-    fpscounter = str(round(1000/(pg.time.get_ticks()-startFrameTime)))
+    fpscounter = str(round(1000/(pg.time.get_ticks()-startFrameTime + 0.0000000001)))
     
