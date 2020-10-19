@@ -9,7 +9,7 @@ screen = pg.display.set_mode(screen_Size)
 
 pg.display.set_caption("FranEngine2")
 
-player_Pos = [500,500]
+player_Pos = [5,5]
 player_Size = (20,20)
 move_Vel = 5
 rot_Speed = 2

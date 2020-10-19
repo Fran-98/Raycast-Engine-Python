@@ -19,29 +19,22 @@ class Raycasting:
         while column < screen_Size[0]-1:
             
             cameraX = 2 * column / screen_Size[0] - 1.0
+
             ray_Direction[0] = direction[0] + plane[0] * cameraX
-            ray_Direction[1] = direction[1] + plane[1] * cameraX
+            ray_Direction[1] = direction[1] + plane[1] * cameraX  + .0000000001
  
             ray_Map_Pos[0] = int(ray_Pos[0]) 
             ray_Map_Pos[1] = int(ray_Pos[1])
             
-            
-            if ray_Direction[1] == 0:
-                deltaDistX = 0
-                deltaDistY = 1
-            if ray_Direction[0] == 0:
-                deltaDistX = 1
-                deltaDistY = 0
-            if ray_Direction[0] != 0 and ray_Direction[1] != 0:
-                deltaDistX = abs(1/ray_Direction[0]) 
-                deltaDistY = abs(1/ray_Direction[1])
+            deltaDistX = sqrt (1.0 +(ray_Direction[1] * ray_Direction[1])/(ray_Direction[0]*ray_Direction[0]))
+            deltaDistY = sqrt (1.0 +(ray_Direction[0] * ray_Direction[0])/(ray_Direction[1]*ray_Direction[1]))
             
             if ray_Direction[0] < 0:
                 stepX = -1 
                 sideDistX = (ray_Pos[0] - ray_Map_Pos[0]) * deltaDistX
             else:
                 stepX = 1  
-                sideDistX = (ray_Map_Pos[1] + 1.0 - ray_Pos[0]) * deltaDistX
+                sideDistX = (ray_Map_Pos[0] + 1.0 - ray_Pos[0]) * deltaDistX
 
             if ray_Direction[1] < 0:
                 stepX = -1 
@@ -57,7 +50,7 @@ class Raycasting:
 
                 if sideDistX < sideDistY:
                     sideDistX += deltaDistX
-                    ray_Map_Pos[0] = stepX
+                    ray_Map_Pos[0] += stepX
                     side = 0
                 else:
                     sideDistY += deltaDistY
@@ -65,7 +58,28 @@ class Raycasting:
                     side = 1
                 if Map[ray_Map_Pos[0]][ray_Map_Pos[1]]:
                     hit = True
-                    
+                
+            if side == 0:
+                perp_Wall_Dist = abs((ray_Map_Pos[0]-ray_Pos[0]+(1- stepX)/2)/ray_Direction[0])
+            else:
+                perp_Wall_Dist = abs((ray_Map_Pos[1]-ray_Pos[1]+(1- stepY)/2)/ray_Direction[1])
+
+            if perp_Wall_Dist == 0:
+                wall_Height = 0
+            else:
+                wall_Height = int(screen_Size[1]/perp_Wall_Dist)
+
+            drawStart = -wall_Height / 2 + screen_Size[1]/2
+
+            if drawStart < 0:
+                drawStart = 0
+
+            drawEnd = wall_Height / 2 + screen_Size[1]/2
+
+            if drawEnd >= screen_Size[1]:
+                drawEnd = screen_Size[1] - 1
+
+            pg.draw.line(screen,color,(column,drawStart),(column,drawEnd))
 
             column += 1
 
