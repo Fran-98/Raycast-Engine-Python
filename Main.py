@@ -9,14 +9,11 @@ screen = pg.display.set_mode(screen_Size)
 
 pg.display.set_caption("FranEngine2")
 
-player_Pos = [5,5]
-player_Size = (20,20)
+player_Pos = [7,7]
 move_Vel = 5
 rot_Speed = 2
-look_Ang = 0
 fov = 60
 
-dist_to_plane = screen_Size[0]/tan(degrees(fov))
 ray_Step = fov/screen_Size[0]
 
 direction = [-1.0,0.0]
@@ -58,18 +55,18 @@ while run:
     # To rotate the view we have to rotate the camera plane
     if keys[pg.K_a]:
         old_direction = direction[0]
-        direction[0] = direction[0] * cos(-radians(rot_Speed)) - direction[1] * sin(-radians(rot_Speed))
-        direction[1] = old_direction * sin(-radians(rot_Speed)) + direction[1] * cos(-radians(rot_Speed)) 
+        direction[0] = direction[0] * cos(radians(rot_Speed)) - direction[1] * sin((radians(rot_Speed)))
+        direction[1] = old_direction * sin(radians(rot_Speed)) + direction[1] * cos((radians(rot_Speed))) 
         old_Plane = plane[0]
-        plane[0]= plane[0] * cos(-radians(rot_Speed)) - plane[1] * sin(-radians(rot_Speed))
-        plane[0]= old_Plane * cos(-radians(rot_Speed)) + plane[1] * cos(-radians(rot_Speed))
+        plane[0]= plane[0] * cos(radians(rot_Speed)) - plane[1] * sin((radians(rot_Speed)))
+        plane[1]= old_Plane * cos((radians(rot_Speed))) + plane[1] * cos((radians(rot_Speed)))
     if keys[pg.K_d]:
         old_direction = direction[0]
         direction[0] = direction[0] * cos(radians(rot_Speed)) - direction[1] * sin(radians(rot_Speed))
         direction[1] = old_direction * sin(radians(rot_Speed)) + direction[1] * cos(radians(rot_Speed)) 
         old_Plane = plane[0]
         plane[0]= plane[0] * cos(radians(rot_Speed)) - plane[1] * sin(radians(rot_Speed))
-        plane[0]= old_Plane * cos(radians(rot_Speed)) + plane[1] * cos(radians(rot_Speed))
+        plane[1]= old_Plane * cos(radians(rot_Speed)) + plane[1] * cos(radians(rot_Speed))
     
     
     
@@ -77,7 +74,7 @@ while run:
     screen.fill((145,145,145)) #floor
     pg.draw.rect(screen,(60,255,220),(0,0,screen_Size[0],screen_Size[1]//2)) #celling  
 
-    Raycasting.casting3D(screen,screen_Size,player_Pos,direction,plane,fov,Map,ray_Step,dist_to_plane)
+    Raycasting.casting3D(screen,screen_Size,player_Pos,direction,plane,fov,Map,ray_Step)
 
     pg.display.update() 
 

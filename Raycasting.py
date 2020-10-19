@@ -3,7 +3,7 @@ from math import*
 
 class Raycasting:
 
-    def casting3D(screen,screen_Size,ray_Pos,direction,plane,fov,Map,ray_Step,dist_to_plane):
+    def casting3D(screen,screen_Size,ray_Pos,direction,plane,fov,Map,ray_Step):
         
         column = 0        
     
