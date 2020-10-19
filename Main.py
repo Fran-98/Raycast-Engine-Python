@@ -11,7 +11,7 @@ screen = pg.display.set_mode(screen_Size)
 pg.display.set_caption("FranEngine2")
 
 player_Pos = [2,2]
-move_Vel = 10
+move_Speed = 4
 rot_Speed = 2
 fov = 60
 
@@ -37,26 +37,30 @@ while run:
      # To rotate the view we have to rotate the camera plane
     if keys[pg.K_a]:
         old_direction = direction[0]
-        direction[0] = direction[0] * cos(rot_Speed) - direction[1] * sin((rot_Speed))
-        direction[1] = old_direction * sin(rot_Speed) + direction[1] * cos((rot_Speed)) 
+        direction[0] = direction[0] * cos(rot_Vel) - direction[1] * sin((rot_Vel))
+        direction[1] = old_direction * sin(rot_Vel) + direction[1] * cos((rot_Vel)) 
         old_Plane = plane[0]
-        plane[0]= plane[0] * cos(rot_Speed) - plane[1] * sin(rot_Speed)
-        plane[1]= old_Plane * sin(rot_Speed) + plane[1] * cos(rot_Speed)
+        plane[0]= plane[0] * cos(rot_Vel) - plane[1] * sin(rot_Vel)
+        plane[1]= old_Plane * sin(rot_Vel) + plane[1] * cos(rot_Vel)
     if keys[pg.K_d]:
         old_direction = direction[0]
-        direction[0] = direction[0] * cos(-rot_Speed) - direction[1] * sin(-rot_Speed)
-        direction[1] = old_direction * sin(-rot_Speed) + direction[1] * cos(-rot_Speed) 
+        direction[0] = direction[0] * cos(-rot_Vel) - direction[1] * sin(-rot_Vel)
+        direction[1] = old_direction * sin(-rot_Vel) + direction[1] * cos(-rot_Vel) 
         old_Plane = plane[0]
-        plane[0]= plane[0] * cos(-rot_Speed) - plane[1] * sin(-rot_Speed)
-        plane[1]= old_Plane * sin(-rot_Speed) + plane[1] * cos(-rot_Speed)
+        plane[0]= plane[0] * cos(-rot_Vel) - plane[1] * sin(-rot_Vel)
+        plane[1]= old_Plane * sin(-rot_Vel) + plane[1] * cos(-rot_Vel)
 
     # Moving to the sides in dev
 
     if keys[pg.K_LEFT]:
+        if Map[int(player_Pos[0] + move_Vel * (direction[0] * cos(radians(90)) - direction[1] * sin(radians(90))))][int(player_Pos[1])] == 0:
             player_Pos[0] += move_Vel * (direction[0] * cos(radians(90)) - direction[1] * sin(radians(90)))
+        if Map[int(player_Pos[0])][int(player_Pos[1] + move_Vel * (direction[0] * sin(radians(90)) + direction[1] * cos(radians(90))))] == 0:
             player_Pos[1] += move_Vel * (direction[0] * sin(radians(90)) + direction[1] * cos(radians(90)))
     if keys[pg.K_RIGHT]:
+        if Map[int(player_Pos[0] + move_Vel * (direction[0] * cos(radians(90)) - direction[1] * sin(radians(90))))][int(player_Pos[1])] == 0:
             player_Pos[0] -= move_Vel * (direction[0] * cos(radians(90)) - direction[1] * sin(radians(90)))
+        if Map[int(player_Pos[0])][int(player_Pos[1] + move_Vel * (direction[0] * sin(radians(90)) + direction[1] * cos(radians(90))))] == 0:
             player_Pos[1] -= move_Vel * (direction[0] * sin(radians(90)) + direction[1] * cos(radians(90)))
 
 
@@ -82,8 +86,8 @@ while run:
 
     frame_time = (pg.time.get_ticks() - startFrameTime)/ 1000
 
-    move_Vel = frame_time * 1
-    rot_Speed = frame_time * 3
+    move_Vel = frame_time * move_Speed
+    rot_Vel = frame_time * rot_Speed
     #fps counter
     fpscounter = str(round(1000/(pg.time.get_ticks()-startFrameTime)))
     
