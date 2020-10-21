@@ -13,13 +13,15 @@ pg.display.set_caption("FranEngine2")
 player_Pos = [2,2]
 move_Speed = 4
 rot_Speed = 2
-col_Radius = 0.25
+col_Radius = 0.1
 fov = 60
 
 ray_Step = fov/screen_Size[0]
 
-direction = [-1.0,0.0]
+direction = np.array([-1.0,0.0])
 plane = [0.0,0.66]
+
+#Rotation matrix
 
 run = True
 
@@ -38,11 +40,15 @@ while run:
      # To rotate the view we have to rotate the camera plane
     if keys[pg.K_a]:
         old_direction = direction[0]
+
         direction[0] = direction[0] * cos(rot_Vel) - direction[1] * sin((rot_Vel))
         direction[1] = old_direction * sin(rot_Vel) + direction[1] * cos((rot_Vel)) 
+        print(direction)
         old_Plane = plane[0]
         plane[0]= plane[0] * cos(rot_Vel) - plane[1] * sin(rot_Vel)
         plane[1]= old_Plane * sin(rot_Vel) + plane[1] * cos(rot_Vel)
+        
+        print(direction)
     if keys[pg.K_d]:
         old_direction = direction[0]
         direction[0] = direction[0] * cos(-rot_Vel) - direction[1] * sin(-rot_Vel)
@@ -51,30 +57,44 @@ while run:
         plane[0]= plane[0] * cos(-rot_Vel) - plane[1] * sin(-rot_Vel)
         plane[1]= old_Plane * sin(-rot_Vel) + plane[1] * cos(-rot_Vel)
 
-    # Moving to the sides in dev
+    col_RadiusX = col_Radius * (direction[0]/abs(direction[0]))
+    if direction[0]/abs(direction[0]) < 0:
+        col_RadiusX -= 1
 
+    if direction[1] == 0:
+        col_RadiusY = col_Radius
+    else:
+        col_RadiusY = col_Radius * (direction[1]/abs(direction[1]))
+
+    if (direction[1]/abs(direction[1])) < 0:
+        col_RadiusY -= 1
+
+    # No colisions
     if keys[pg.K_LEFT]:
-        if Map[int(col_Radius + player_Pos[0] + move_Vel * (direction[0] * cos(radians(90)) - direction[1] * sin(radians(90))))][int(player_Pos[1])] == 0:
+        if Map[int(col_Radius * direction[0] + player_Pos[0] + move_Vel * (direction[0] * cos(radians(90)) - direction[1] * sin(radians(90))))][int(player_Pos[1])] == 0:
             player_Pos[0] += move_Vel * (direction[0] * cos(radians(90)) - direction[1] * sin(radians(90)))
-        if Map[int(player_Pos[0])][int(col_Radius + player_Pos[1] + move_Vel * (direction[0] * sin(radians(90)) + direction[1] * cos(radians(90))))] == 0:
+        if Map[int(player_Pos[0])][int(col_Radius * direction[1] + player_Pos[1] + move_Vel * (direction[0] * sin(radians(90)) + direction[1] * cos(radians(90))))] == 0:
             player_Pos[1] += move_Vel * (direction[0] * sin(radians(90)) + direction[1] * cos(radians(90)))
     if keys[pg.K_RIGHT]:
-        if Map[int(col_Radius + player_Pos[0] + move_Vel * (direction[0] * cos(radians(90)) - direction[1] * sin(radians(90))))][int(player_Pos[1])] == 0:
+        if Map[int(col_Radius * direction[0] + player_Pos[0] - move_Vel * (direction[0] * cos(radians(90)) - direction[1] * sin(radians(90))))][int(player_Pos[1])] == 0:
             player_Pos[0] -= move_Vel * (direction[0] * cos(radians(90)) - direction[1] * sin(radians(90)))
-        if Map[int(player_Pos[0])][int(col_Radius + player_Pos[1] + move_Vel * (direction[0] * sin(radians(90)) + direction[1] * cos(radians(90))))] == 0:
+        if Map[int(player_Pos[0])][int(col_Radius * direction[1] + player_Pos[1] - move_Vel * (direction[0] * sin(radians(90)) + direction[1] * cos(radians(90))))] == 0:
             player_Pos[1] -= move_Vel * (direction[0] * sin(radians(90)) + direction[1] * cos(radians(90)))
 
 
     # And here we have some movement(conventional)
+    # Colisions working
     if keys[pg.K_UP]:
-        if Map[int(col_Radius + player_Pos[0] + direction[0] * move_Vel)][int(player_Pos[1])] == 0:
+    
+        if Map[round(col_RadiusX + player_Pos[0] + direction[0] * move_Vel)][int(player_Pos[1])] == 0:
             player_Pos[0] += direction[0] * move_Vel
-        if Map[int(player_Pos[0])][int(col_Radius + player_Pos[1] + direction[1]* move_Vel)] == 0:
+        if Map[int(player_Pos[0])][round(col_RadiusY + player_Pos[1] + direction[1]* move_Vel)] == 0:
             player_Pos[1] += direction[1] * move_Vel
+    # Colisions not working
     if keys[pg.K_DOWN]: 
-        if Map[int(col_Radius + player_Pos[0] - direction[0] * move_Vel)][int(player_Pos[1])] == 0:
+        if Map[int((-col_RadiusX) + player_Pos[0] - direction[0] * move_Vel)][int(player_Pos[1])] == 0:
             player_Pos[0] -= direction[0] * move_Vel
-        if Map[int(player_Pos[0])][int(col_Radius + player_Pos[1] - direction[1] * move_Vel)] == 0:
+        if Map[int(player_Pos[0])][int(-col_RadiusY + player_Pos[1] - direction[1] * move_Vel)] == 0:
             player_Pos[1] -= direction[1] * move_Vel
     
     # Drawing celling and floor
